@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
-import { useRouter } from 'next/router';
 import { Moon, Sun, Github } from 'lucide-react';
 
 import { Textarea } from '@/components/ui/textarea';
@@ -16,7 +15,6 @@ import { useToast } from '@/hooks/use-toast';
 export default function Page() {
 	const { setTheme, theme } = useTheme();
 	const { toast } = useToast();
-	const { basePath } = useRouter();
 	const {
 		addresses,
 		setAddresses,
@@ -72,7 +70,6 @@ export default function Page() {
 					{progress < 100 && <Progress value={progress} />}
 					<DataTable
 						columns={getColumns(
-							basePath,
 							toast,
 							hideAddresses,
 							setHideAddresses,

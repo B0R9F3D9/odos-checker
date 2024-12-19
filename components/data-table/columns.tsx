@@ -16,7 +16,6 @@ import { Wallet } from '@/components/data-table/types';
 import { Toast } from '@/hooks/use-toast';
 
 export const getColumns = (
-	basePath: string,
 	toast: (options: Toast) => {
 		id: string;
 		dismiss: () => void;
@@ -187,7 +186,7 @@ export const getColumns = (
 						rel="noreferrer"
 					>
 						<Image
-							src={`${basePath}/debank.png`}
+							src="./debank.svg"
 							alt="debank"
 							width={28}
 							height={28}

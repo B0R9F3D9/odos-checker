@@ -14,6 +14,7 @@ export function promiseAll<T>(
 	let runningTasks = 0;
 	let currentIndex = 0;
 	let completedTasks = 0;
+	setProgress?.(0);
 
 	return new Promise((resolve, reject) => {
 		const next = () => {
