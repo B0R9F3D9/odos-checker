@@ -26,6 +26,7 @@ export default function Page() {
 		deleteWallet,
 	} = useWalletStore();
 	const [progress, setProgress] = useState(0);
+	const [showProgress, setShowProgress] = useState(false);
 
 	return (
 		<div className="min-h-screen flex flex-col">
@@ -60,14 +61,16 @@ export default function Page() {
 						onChange={e => setAddresses(e.target.value)}
 					/>
 					<Button
-						onClick={async () => await checkWallets(setProgress)}
+						onClick={async () =>
+							await checkWallets(setShowProgress, setProgress)
+						}
 						className="w-full"
 						disabled={addresses.length === 0}
 						variant="outline"
 					>
 						Check
 					</Button>
-					{progress < 100 && <Progress value={progress} />}
+					{showProgress && <Progress value={progress} />}
 					<DataTable
 						columns={getColumns(
 							toast,

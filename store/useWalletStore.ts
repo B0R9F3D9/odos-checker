@@ -14,7 +14,10 @@ interface WalletState {
 	wallets: Wallet[];
 	setWallets: (wallets: Wallet[]) => void;
 
-	checkWallets: (setProgress: (progress: number) => void) => Promise<void>;
+	checkWallets: (
+		setShowProgress: (show: boolean) => void,
+		setProgress: (progress: number) => void,
+	) => Promise<void>;
 	recheckWallet: (address: string) => Promise<void>;
 	deleteWallet: (address: string) => void;
 }
@@ -29,7 +32,11 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 	wallets: [],
 	setWallets: wallets => set({ wallets }),
 
-	checkWallets: async (setProgress: (progress: number) => void) => {
+	checkWallets: async (
+		setShowProgress: (show: boolean) => void,
+		setProgress: (progress: number) => void,
+	) => {
+		setShowProgress(true);
 		const { addresses, setWallets, setAddresses } = get();
 		const addressesList = splitAddresses(addresses);
 		setWallets(
@@ -40,6 +47,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 		);
 		setAddresses(addressesList.join('\n'));
 		setWallets(await fetchWallets(addressesList, setProgress));
+		setShowProgress(false);
 	},
 
 	recheckWallet: async address => {
