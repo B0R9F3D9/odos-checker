@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function promiseAll<T>(
 	tasks: (() => Promise<T>)[],
 	limit: number,
+	updateWallet?: (result: T) => void,
 	setProgress?: (progress: number) => void,
 ): Promise<T[]> {
 	const results: T[] = [];
@@ -34,17 +35,16 @@ export function promiseAll<T>(
 			task()
 				.then(result => {
 					results[taskIndex] = result;
+					updateWallet?.(result);
 				})
 				.catch(err => {
+					console.error(`Task ${taskIndex} failed:`, err);
 					reject(err);
-					return;
 				})
 				.finally(() => {
 					runningTasks--;
 					completedTasks++;
-					if (setProgress) {
-						setProgress((completedTasks / tasks.length) * 100);
-					}
+					setProgress?.((completedTasks / tasks.length) * 100);
 					next();
 				});
 

@@ -13,9 +13,10 @@ interface WalletState {
 
 	wallets: Wallet[];
 	setWallets: (wallets: Wallet[]) => void;
+	updateWallet: (wallet: Wallet) => void;
 
 	checkWallets: (
-		setShowProgress: (show: boolean) => void,
+		setshowProgress: (show: boolean) => void,
 		setProgress: (progress: number) => void,
 	) => Promise<void>;
 	recheckWallet: (address: string) => Promise<void>;
@@ -31,13 +32,21 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
 	wallets: [],
 	setWallets: wallets => set({ wallets }),
+	updateWallet: update => {
+		const { wallets, setWallets } = get();
+		setWallets(
+			wallets.map(wallet =>
+				wallet.address === update.address ? { ...wallet, ...update } : wallet,
+			),
+		);
+	},
 
 	checkWallets: async (
 		setShowProgress: (show: boolean) => void,
 		setProgress: (progress: number) => void,
 	) => {
 		setShowProgress(true);
-		const { addresses, setWallets, setAddresses } = get();
+		const { addresses, updateWallet, setWallets, setAddresses } = get();
 		const addressesList = splitAddresses(addresses);
 		setWallets(
 			addressesList.map((wallet, index) => ({
@@ -46,12 +55,12 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 			})),
 		);
 		setAddresses(addressesList.join('\n'));
-		setWallets(await fetchWallets(addressesList, setProgress));
+		await fetchWallets(addressesList, updateWallet, setProgress);
 		setShowProgress(false);
 	},
 
 	recheckWallet: async address => {
-		const { wallets, setWallets } = get();
+		const { wallets, updateWallet, setWallets } = get();
 		setWallets(
 			wallets.map(wallet =>
 				wallet.address === address
@@ -59,12 +68,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 					: wallet,
 			),
 		);
-		const rechecked = await fetchWallets([address]);
-		setWallets(
-			wallets.map(wallet =>
-				wallet.address === address ? rechecked[0] : wallet,
-			),
-		);
+		await fetchWallets([address], updateWallet);
 	},
 
 	deleteWallet: address => {

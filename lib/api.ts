@@ -70,6 +70,7 @@ const checkWallet = async (index: number, wallet: string): Promise<Wallet> => {
 
 export const fetchWallets = async (
 	addresses: string[],
+	updateWallet?: (wallet: Wallet) => void,
 	setProgress?: (progress: number) => void,
 ): Promise<Wallet[]> => {
 	return await promiseAll(
@@ -88,6 +89,7 @@ export const fetchWallets = async (
 			}
 		}),
 		3,
+		updateWallet,
 		setProgress,
 	);
 };
