@@ -169,6 +169,34 @@ export const getColumns = (
 		},
 	},
 	{
+		accessorKey: 'allocation',
+		header: ({ column }) => {
+			return (
+				<div className="text-center">
+					<Button
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+					>
+						Drop
+						<ArrowDownUp />
+					</Button>
+				</div>
+			);
+		},
+		cell: ({ row }) => {
+			let result;
+			if (row.getValue('allocation') === null) result = <CircleXIcon />;
+			else if (row.getValue('allocation') === undefined)
+				result = <Skeleton className="w-16 h-8" />;
+			else result = row.getValue<number>('allocation');
+			return (
+				<div className="flex text-center justify-center items-center">
+					{result}
+				</div>
+			);
+		},
+	},
+	{
 		id: 'actions',
 		header: () => <div className="text-center">Actions</div>,
 		cell: ({ row }) => (

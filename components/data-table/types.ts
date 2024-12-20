@@ -4,4 +4,5 @@ export type Wallet = {
 	txs?: number | null;
 	days?: number | null;
 	volume?: number | null;
+	allocation?: number | null;
 };
